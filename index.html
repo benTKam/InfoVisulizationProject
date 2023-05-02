@@ -1,27 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>D3 Line Chart</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    
-    <style>
-      #tooltip {
-  font-size: 12px;
-  z-index: 9999;
-}
 
-    </style>
+<head>
+  <meta charset="utf-8" />
+  <title>D3 Line Chart</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <style>
+    #tooltip {
+      font-size: 12px;
+      z-index: 9999;
+    }
+
+    #legend-container {
+      position: absolute;
+      top: 50px;
+      right: 50px;
+    }
+  </style>
 
 
-  </head>
-  <body>
-    <div id="graph-container"></div>
-    <div id="tooltip" >
-    <div id="legend"></div>
-     
+</head>
+
+<body>
+  <div id="graph-container"></div>
+
+      <!-- Add the div for the tooltip -->
+      <div id="tooltip"></div>
+      
+    <!-- Add the div for the legend -->
+    <div id="legend-container">
+      <svg id="legend"></svg>
+    </div>
+
+    <!-- Add the div for the scroll story -->
+    <div id="scroll-story-container">
+      
+      <div class="section" id="section-1">
+        <h1>Section 1</h1>
+        <p>Content for section 1</p>
+      </div>
+      <div class="section" id="section-2">
+        <h1>Section 2</h1>
+        <p>Content for section 2</p>
+      </div>
+      <!-- Add more sections as needed -->
+    </div>
+
+    <script src="https://unpkg.com/scrollama"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
     <script src="script.js"></script>
-  </body>
-</html>
+</body>
 
+</html>
