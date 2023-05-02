@@ -60,8 +60,6 @@ d3.tsv("20006.tsv")
   .then(function (data) {
     console.log(data); // Verify that the data is being loaded correctly
 
-
-
     // Define scales for the x and y axes
     let xScale = d3
       .scaleLinear()
