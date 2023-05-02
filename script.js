@@ -1,17 +1,31 @@
-var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+let margin = { top: 50, right: 50, bottom: 50, left: 50 },
   width = 1800 - margin.left - margin.right,
   height = 1500 - margin.top - margin.bottom;
 
-var svg = d3
-  .select("#graph-container")
+let svg = d3
+  .select("#section-1")
   .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // Define the steps of the scroll story
-var steps = [
+
+// === Scrollytelling boilerplate === //
+function scroll(n, offset, func1, func2) {
+  const el = document.getElementById(n)
+  return new Waypoint({
+    element: document.getElementById(n),
+    handler: function (direction) {
+      direction == 'down' ? func1() : func2();
+    },
+    //start 75% from the top of the div
+    offset: offset
+  });
+};
+
+// Define the steps of the scroll story
+let steps = [
   {
     title: "Step 1",
     description: "This is the description of step 1.",
@@ -39,27 +53,29 @@ var steps = [
 ];
 
 // Define the current step
-var currentStep = 0;
+let currentStep = 0;
 
 // Load the data from the TSV file
 d3.tsv("20006.tsv")
   .then(function (data) {
     console.log(data); // Verify that the data is being loaded correctly
 
+
+
     // Define scales for the x and y axes
-    var xScale = d3
+    let xScale = d3
       .scaleLinear()
       .domain(d3.extent(data, function (d) { return d.startYear; }))
       .range([0, width]);
 
-    var yScale = d3
+    let yScale = d3
       .scaleLinear()
       .domain([0, 10])
       .range([height, 0]);
 
     // Define color scale
     const distinctValues = [...new Set(data.map(d => d.genres.split(",")[0]))];
-    var colorScale = d3.scaleOrdinal().domain(distinctValues)
+    let colorScale = d3.scaleOrdinal().domain(distinctValues)
       .range(d3.schemeSet2);
 
     // Add the x and y axes
@@ -73,9 +89,11 @@ d3.tsv("20006.tsv")
       .call(d3.axisLeft(yScale));
 
     // Add a scatter plot point for each movie
-    var scatterPoints = svg
+    let data1 = svg
       .selectAll(".scatter-point")
-      .data(data)
+      .data(data.filter(function(d){
+        return d.startYear >= 2000 && d.startYear <= 2005;
+      }))
       .enter()
       .append("circle")
       .attr("class", "scatter-point")
@@ -83,7 +101,7 @@ d3.tsv("20006.tsv")
       .attr("cy", function (d) { return yScale(d.averageRating); })
       .attr("r", 5)
       .attr("fill", function (d) { return colorScale(d.genres.split(",")[0]); })
-    scatterPoints.on('mouseover', (event, d) => {
+    data1.on('mouseover', (event, d) => {
       d3.select(event.currentTarget).style("stroke", "black");
       d3.select('#tooltip')
         .style('display', 'block')
@@ -95,8 +113,10 @@ d3.tsv("20006.tsv")
           .style("stroke", "none");
       })
 
+    // let data2 = 
+
     // Add legend
-    var legend = svg.selectAll(".legend")
+    let legend = svg.selectAll(".legend")
       .data(distinctValues)
       .enter().append("g")
       .attr("class", "legend")
@@ -116,8 +136,8 @@ d3.tsv("20006.tsv")
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function (d) { return d; });
-      })
+  })
 
-      .catch(function (error) {
-      console.log(error); // Log any errors
-      });
+  .catch(function (error) {
+    console.log(error); // Log any errors
+  });
