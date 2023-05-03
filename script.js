@@ -1,23 +1,25 @@
-const colorMapping = {
-  "Comedy": "#FFC300",
-  "Action": "#FF5733",
-  "Biography": "#C70039",
-  "Drama": "#900C3F",
-  "Adventure": "#581845",
-  "Animation": "#900C3F",
-  "Crime": "#C70039",
-  "Fantasy": "#581845",
-  "Documentary": "#FFC300",
-  "Horror": "#FF5733",
-  "Thriller": "#900C3F",
-  "Mystery": "#FFC300",
-  "Romance": "#FF5733",
-  "Family": "#C70039",
-  "Sci-Fi": "#FFC300",
-  "Music": "#581845",
-  "History": "#FF5733",
-  // Add more genres and colors here
-};
+const customColors = [
+    "#1f77b4",
+    "#aec7e8",
+    "#ff7f0e",
+    "#ffbb78",
+    "#2ca02c",
+    "#98df8a",
+    "#d62728",
+    "#ff9896",
+    "#9467bd",
+    "#c5b0d5",
+    "#8c564b",
+    "#c49c94",
+    "#e377c2",
+    "#f7b6d2",
+    "#7f7f7f",
+    "#c7c7c7",
+    "#bcbd22",
+    "#dbdb8d",
+    "#17becf",
+    "#9edae5"
+  ];
 
 let margin = { top: 50, right: 50, bottom: 50, left: 100 },
   width = 2000 - margin.left - margin.right,
@@ -47,10 +49,11 @@ d3.tsv("20006.tsv")
     console.log(error); // Log any errors
   });
 
+
+
+
 // Add event listener to the filter button
 let currentYear = 1990;
-
-
 
 d3.select("#filter-button").on("click", function () {
   // Filter data based on currentYear
@@ -69,13 +72,18 @@ d3.select("#filter-button").on("click", function () {
   }
 });
 
+
+
 let selectedGenre = '';
 
 // Add event listener to button
 document.getElementById("sort-by-genre-button").addEventListener("click", function() {
   // Define an array of the distinct genre values
   const distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
-  
+  const genreColorMap = {};
+  distinctGenres.forEach((genre, index) => {
+    genreColorMap[genre] = customColors[index % customColors.length];
+  });
   // Get the index of the currently selected genre
   let currentIndex = distinctGenres.indexOf(selectedGenre);
   
@@ -87,6 +95,12 @@ document.getElementById("sort-by-genre-button").addEventListener("click", functi
   
   // Filter the data by the selected genre
   const filteredData = data.filter(d => d.genres.split(",")[0] === selectedGenre)
+  .map(d => {
+    return {
+      ...d,
+      color: genreColorMap[d.genres.split(",")[0]]
+    };
+  });
   // Call the updateScatterPlot function with the filtered data
   
   updateScatterPlot(filteredData);
@@ -106,10 +120,11 @@ function updateScatterPlot(data) {
     .domain([0, 10])
     .range([height, 0]);
 
-  // Define color scale
-  const distinctValues = [...new Set(data.map(d => d.genres.split(",")[0]))];
-  let colorScale = d3.scaleOrdinal().domain(distinctValues)
-    .range(d3.schemeCategory10);
+  // Creates a custom color scale
+  const distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
+  const colorScale = d3.scaleOrdinal()
+    .domain(distinctGenres)
+    .range(customColors);
 
   // Remove the existing scatter plot points
   svg.selectAll(".scatter-point").remove();
@@ -138,7 +153,7 @@ function updateScatterPlot(data) {
 });
   // Add tooltip functionality
   dataPoints.on('mouseover', (event, d) => {
-    d3.select(event.currentTarget).style("stroke", "black");
+    d3.select(event.currentTarget).style("stroke", "white");
     d3.select('#tooltip')
       .style('display', 'block')
       .html('<h1 class="tooltip-header">' + "Title: " + d.primaryTitle + " Genre: " + d.genres + '</h1>');
@@ -165,7 +180,7 @@ function updateScatterPlot(data) {
 
   // Add legend
   let legend = svg.selectAll(".legend")
-    .data(distinctValues)
+    .data(distinctGenres)
     .enter()
     .append("g")
     .attr("class", "legend")
