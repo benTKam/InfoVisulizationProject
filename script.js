@@ -1,3 +1,24 @@
+const colorMapping = {
+  "Comedy": "#FFC300",
+  "Action": "#FF5733",
+  "Biography": "#C70039",
+  "Drama": "#900C3F",
+  "Adventure": "#581845",
+  "Animation": "#900C3F",
+  "Crime": "#C70039",
+  "Fantasy": "#581845",
+  "Documentary": "#FFC300",
+  "Horror": "#FF5733",
+  "Thriller": "#900C3F",
+  "Mystery": "#FFC300",
+  "Romance": "#FF5733",
+  "Family": "#C70039",
+  "Sci-Fi": "#FFC300",
+  "Music": "#581845",
+  "History": "#FF5733",
+  // Add more genres and colors here
+};
+
 let margin = { top: 50, right: 50, bottom: 50, left: 50 },
   width = 2000 - margin.left - margin.right,
   height = 1500 - margin.top - margin.bottom;
@@ -48,6 +69,29 @@ d3.select("#filter-button").on("click", function () {
   }
 });
 
+let selectedGenre = '';
+
+// Add event listener to button
+document.getElementById("sort-by-genre-button").addEventListener("click", function() {
+  // Define an array of the distinct genre values
+  const distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
+  
+  // Get the index of the currently selected genre
+  let currentIndex = distinctGenres.indexOf(selectedGenre);
+  
+  // Increment the index to select the next genre, or reset to 0 if at the end
+  currentIndex = (currentIndex + 1) % distinctGenres.length;
+  
+  // Set the selected genre to the new index
+  selectedGenre = distinctGenres[currentIndex];
+  
+  // Filter the data by the selected genre
+  const filteredData = data.filter(d => d.genres.split(",")[0] === selectedGenre)
+  // Call the updateScatterPlot function with the filtered data
+  
+  updateScatterPlot(filteredData);
+});
+
 
 // Update the scatter plot with the given data
 function updateScatterPlot(data) {
@@ -77,11 +121,21 @@ function updateScatterPlot(data) {
     .enter()
     .append("circle")
     .attr("class", "scatter-point")
-    .attr("cx", function (d) { return xScale(d.startYear); })
-    .attr("cy", function (d) { return yScale(d.averageRating); })
-    .attr("r", 10)
+    .attr("r", 5)
     .attr("fill", function (d) { return colorScale(d.genres.split(",")[0]); });
 
+  // Define the force simulation layout
+  let simulation = d3.forceSimulation(data)
+    .force("x", d3.forceX(function(d) { return xScale(d.startYear); }).strength(1))
+    .force("y", d3.forceY(function(d) { return yScale(d.averageRating); }).strength(1))
+    .force("collide", d3.forceCollide().radius(5).strength(1));
+
+  // Update the position of the points on each tick of the simulation
+  simulation.on("tick", function() {
+    dataPoints
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+});
   // Add tooltip functionality
   dataPoints.on('mouseover', (event, d) => {
     d3.select(event.currentTarget).style("stroke", "black");
