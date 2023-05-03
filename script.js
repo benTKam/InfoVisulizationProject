@@ -234,5 +234,6 @@ function updateScatterPlot(data) {
     .attr("dy", ".35em")
     .style("text-anchor", "end")
     .text(d => d)
-    .style("fill", "white");
+    .style("fill", "white")  
+    .style("font-size", "20px");;
 }
