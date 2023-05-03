@@ -7,17 +7,17 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 
   <style>
-    html{
-      background-color:black;
+    html {
+      background-color: black;
       color: white;
     }
 
-    h1{
-      color:lightseagreen;
+    h1 {
+      color: lightseagreen;
     }
 
-    h2{
-      color:royalblue;
+    h2 {
+      color: royalblue;
     }
 
     #tooltip {
@@ -31,9 +31,9 @@
       right: 50px;
     }
 
-    button{
-      background-color:crimson;
-      border-color:darkred;
+    button {
+      background-color: crimson;
+      border-color: darkred;
       color: lightgray;
       font-weight: 700;
     }
@@ -69,17 +69,22 @@
     <div class="section" id="section-3">
       <h2>You will have the ability to manipulate data within our scatter plot below:</h2>
       <p>Click on the 'Sort By Genres' button to view the popularity of each genre individually</p>
-      <p>Each genre will have a specific color coordinated with it, therefore use the legend key found on the right hand side of the scatter plot graph.</p>
+      <p>Each genre will have a specific color coordinated with it, therefore use the legend key found on the right hand
+        side of the scatter plot graph.</p>
     </div>
   </div>
 
-  <div class="fixed">
+  <div class="fixed">   
+     <span id="tooltip"></span>
     <button id="filter-button">Update Plot</button>
     <button id="sort-by-genre-button"> Sort By Genre</button>
+    <button id="filter-top-100"> Sort By Top 100</button>
+
+    <br>
     <div id="canvas"></div>
-    
+
   </div>
-      <div id="tooltip"></div>
+
   <script src="https://unpkg.com/scrollama"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/noframework.waypoints.min.js"></script>
