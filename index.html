@@ -5,15 +5,21 @@
   <meta charset="utf-8" />
   <title>D3 Line Chart</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus Jakarta Sans" />
 
   <style>
+    body{
+      font-family: 'Plus Jakarta Sans';
+    }
     html {
       background-color: rgb(61, 61, 61);
       color: white;
     }
 
-    h1 {
+    span {
       color: lightseagreen;
+      float: right;
+
     }
 
     h2 {
@@ -21,7 +27,7 @@
     }
 
     #tooltip {
-      font-size: 12px;
+      font-size: 35px;
       z-index: 9999;
     }
 
@@ -74,14 +80,16 @@
     </div>
   </div>
 
-  <div class="fixed">   
-     <span id="tooltip"></span>
-    <button id="filter-button">Update Plot</button>
-    <button id="sort-by-genre-button"> Sort By Genre</button>
-    <button id="filter-top-100"> Sort By Top 100</button>
+  <div class="fixed">
 
+    <button id="filter-button" style="float:left">Update Plot</button>
+    <button id="sort-by-genre-button" style="float:left"> Sort By Genre</button>
+    <button id="filter-top-100" style="float:left"> Sort By Top 100</button>
+    <label id="tooltip" style="float:right"></label>
+    <label for="top-100" id="genres-count"></label>
+<br>
     <br>
-    <div id="canvas"></div>
+    <div id="canvas" style="float:none"></div>
 
   </div>
 

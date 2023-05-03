@@ -71,7 +71,7 @@ d3.select("#filter-button").on("click", function () {
 
 let selectedGenre = '';
 
-// Add event listener to button
+// sort graph by genre
 document.getElementById("sort-by-genre-button").addEventListener("click", function() {
   // Define an array of the distinct genre values
   const distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
@@ -98,7 +98,7 @@ document.getElementById("sort-by-genre-button").addEventListener("click", functi
     });
     d3.select('#tooltip')
     .style('display', 'block')
-    .html('<h1 class="tooltip-header">' + " Genre: " + selectedGenre + '</h1>');
+    .html('<span class="tooltip-header">' + " Genre: " + selectedGenre + '</span>');
   // Call the updateScatterPlot function with the filtered data
   updateScatterPlot(filteredData);
 });
@@ -115,6 +115,11 @@ d3.select("#filter-top-100").on("click", function () {
 
   // Update the scatter plot with the filtered data
   updateScatterPlot(filteredData);
+  // const genresCount = document.getElementById("genres-count");
+
+  // const genres = new Set();
+
+  // filteredData.forEach()
 });
 
 // Update the scatter plot with the given data
@@ -145,7 +150,7 @@ function updateScatterPlot(data) {
     .enter()
     .append("circle")
     .attr("class", "scatter-point")
-    .attr("r", 5)
+    .attr("r", 4)
     .attr("fill", function (d) { return colorScale(d.genres.split(",")[0]); });
 
   // Define the force simulation layout
@@ -165,7 +170,7 @@ function updateScatterPlot(data) {
     d3.select(event.currentTarget).style("stroke", "white");
     d3.select('#tooltip')
       .style('display', 'block')
-      .html('<h1 class="tooltip-header">' + "Title: " + d.primaryTitle + " Genre: " + d.genres + '</h1>');
+      .html('<span class="tooltip-header">' + "Title: " + d.primaryTitle + " Genre: " + d.genres + '</span>');
   })
     .on('mouseleave', (event) => {  //when mouse isn’t over point
       d3.select('#tooltip').style('display', 'none'); // hide tooltip
