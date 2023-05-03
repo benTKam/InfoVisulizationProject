@@ -123,7 +123,7 @@ function updateScatterPlot(data) {
   let xScale = d3
     .scaleLinear()
     .domain(d3.extent(data, function (d) { return d.startYear; }))
-    .range([0, width]);
+    .range([0, width - 100]);
 
   let yScale = d3
     .scaleLinear()
@@ -207,7 +207,7 @@ function updateScatterPlot(data) {
     .attr("dy", ".35em")
     .style("text-anchor", "end")
     .text(d => d)
-    .style("fill", white);;
+    .style("fill", "white");
 }
 
 
