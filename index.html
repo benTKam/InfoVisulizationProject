@@ -7,6 +7,19 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
 
   <style>
+    html{
+      background-color:black;
+      color: white;
+    }
+
+    h1{
+      color:lightseagreen;
+    }
+
+    h2{
+      color:royalblue;
+    }
+
     #tooltip {
       font-size: 12px;
       z-index: 9999;
@@ -16,6 +29,13 @@
       position: absolute;
       top: 50px;
       right: 50px;
+    }
+
+    button{
+      background-color:crimson;
+      border-color:darkred;
+      color: black;
+      font-weight: 700;
     }
   </style>
 
@@ -37,15 +57,20 @@
   <div id="scroll-story-container">
 
     <div class="section" id="section-1">
-      <h1>Section 1</h1>
-      <p>Content for section 1</p>
+      <h1>Movie Genre Popularity</h1>
+      <h2>Throughout the years of 1990 until present year 2023</h2>
+    </div>
 
-    </div>
     <div class="section" id="section-2">
-      <h1>Section 2</h1>
-      <p>Content for section 2</p>
+      <h2>You will have the ability to manipulate data within our scatter plot below:</h2>
+      <p>Click on the 'Update Plot' button to view different movie genres populate year at a time</p>
     </div>
-    <!-- Add more sections as needed -->
+
+    <div class="section" id="section-3">
+      <h2>You will have the ability to manipulate data within our scatter plot below:</h2>
+      <p>Click on the 'Sort By Genres' button to view the popularity of each genre individually</p>
+      <p>Each genre will have a specific color coordinated with it, therefore use the legend key found on the right hand side of the scatter plot graph.</p>
+    </div>
   </div>
 
   <div class="fixed">

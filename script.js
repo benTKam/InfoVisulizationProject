@@ -19,7 +19,7 @@ const colorMapping = {
   // Add more genres and colors here
 };
 
-let margin = { top: 50, right: 50, bottom: 50, left: 50 },
+let margin = { top: 50, right: 50, bottom: 50, left: 100 },
   width = 2000 - margin.left - margin.right,
   height = 1500 - margin.top - margin.bottom;
 
