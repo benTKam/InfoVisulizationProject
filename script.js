@@ -1,21 +1,21 @@
 const customColors = {
-    "Comedy": "#1f77b4",
-    "Action": "#aec7e8",
-    "Biography": "#ff7f0e",
-    "Drama": "#ffbb78",
-    "Adventure": "#2ca02c",
-    "Animation": "#98df8a",
-    "Crime": "#d62728",
-    "Fantasy": "#ff9896",
-    "Documentary": "#9467bd",
-    "Horror": "#c5b0d5",
-    "Thriller": "#8c564b",
-    "Mystery": "#c49c94",
-    "Romance": "#e377c2",
-    "Family": "#f7b6d2",
-    "Sci-Fi": "#7f7f7f",
-    "Music": "#c7c7c7",
-    "History": "#bcbd22"
+  "Comedy": "#1f77b4",
+  "Action": "#aec7e8",
+  "Biography": "#ff7f0e",
+  "Drama": "#ffbb78",
+  "Adventure": "#2ca02c",
+  "Animation": "#98df8a",
+  "Crime": "#d62728",
+  "Fantasy": "#ff9896",
+  "Documentary": "#9467bd",
+  "Horror": "#c5b0d5",
+  "Thriller": "#8c564b",
+  "Mystery": "#c49c94",
+  "Romance": "#e377c2",
+  "Family": "#f7b6d2",
+  "Sci-Fi": "#7f7f7f",
+  "Music": "#c7c7c7",
+  "History": "#bcbd22"
 };
 
 let margin = { top: 50, right: 50, bottom: 50, left: 100 },
@@ -40,6 +40,35 @@ d3.tsv("20006.tsv")
 
     // Initialize the scatter plot
     updateScatterPlot(data);
+    // Define an array of the distinct genre values
+    const distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
+
+    // Count the number of movies for each genre
+    const genreCounts = {};
+    data.forEach(function (d) {
+      const genre = d.genres.split(",")[0];
+      if (genreCounts[genre]) {
+        genreCounts[genre]++;
+      } else {
+        genreCounts[genre] = 1;
+      }
+    });
+
+    // Sort the genres by their counts
+    distinctGenres.sort(function (a, b) {
+      return genreCounts[b] - genreCounts[a];
+    });
+
+    // Create a string containing the sorted genres and their counts
+    let genreList = "";
+    distinctGenres.forEach(function (genre) {
+      genreList += "<li>" + genre + ": " + genreCounts[genre] + "</li>";
+    });
+
+    // Display the genre list in a div
+    d3.select("#genre-list")
+      .html("<ul>" + genreList + "</ul>");
+    console.log(genreList);
     //updateThemeRiver(data);
   })
   .catch(function (error) {
@@ -72,12 +101,12 @@ d3.select("#filter-button").on("click", function () {
 let selectedGenre = '';
 
 // sort graph by genre
-document.getElementById("sort-by-genre-button").addEventListener("click", function() {
+document.getElementById("sort-by-genre-button").addEventListener("click", function () {
   // Define an array of the distinct genre values
   const distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
   let colorScale = d3.scaleOrdinal()
-  .domain(distinctGenres)
-  .range(Object.values(customColors));
+    .domain(distinctGenres)
+    .range(Object.values(customColors));
 
   // Get the index of the currently selected genre
   let currentIndex = distinctGenres.indexOf(selectedGenre);
@@ -96,7 +125,7 @@ document.getElementById("sort-by-genre-button").addEventListener("click", functi
         color: colorScale(d.genres.split(".")[0])
       };
     });
-    d3.select('#tooltip')
+  d3.select('#tooltip')
     .style('display', 'block')
     .html('<span class="tooltip-header">' + " Genre: " + selectedGenre + '</span>');
   // Call the updateScatterPlot function with the filtered data
@@ -106,7 +135,7 @@ document.getElementById("sort-by-genre-button").addEventListener("click", functi
 // Add event listener to the "filter-top-100" button
 d3.select("#filter-top-100").on("click", function () {
   // Sort the data by average rating
-  data.sort(function(a, b) {
+  data.sort(function (a, b) {
     return b.averageRating - a.averageRating;
   });
 
@@ -115,11 +144,6 @@ d3.select("#filter-top-100").on("click", function () {
 
   // Update the scatter plot with the filtered data
   updateScatterPlot(filteredData);
-  // const genresCount = document.getElementById("genres-count");
-
-  // const genres = new Set();
-
-  // filteredData.forEach()
 });
 
 // Update the scatter plot with the given data
@@ -135,11 +159,11 @@ function updateScatterPlot(data) {
     .domain([0, 10])
     .range([height, 0]);
 
-    let distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
-    let colorScale = d3.scaleOrdinal()
-      .domain(distinctGenres)
-      .range(Object.values(customColors));
-      
+  let distinctGenres = [...new Set(data.map(d => d.genres.split(",")[0]))];
+  let colorScale = d3.scaleOrdinal()
+    .domain(distinctGenres)
+    .range(Object.values(customColors));
+
   // Remove the existing scatter plot points
   svg.selectAll(".scatter-point").remove();
 
@@ -150,21 +174,21 @@ function updateScatterPlot(data) {
     .enter()
     .append("circle")
     .attr("class", "scatter-point")
-    .attr("r", 4)
+    .attr("r", 3)
     .attr("fill", function (d) { return colorScale(d.genres.split(",")[0]); });
 
   // Define the force simulation layout
   let simulation = d3.forceSimulation(data)
-    .force("x", d3.forceX(function(d) { return xScale(d.startYear); }).strength(1))
-    .force("y", d3.forceY(function(d) { return yScale(d.averageRating); }).strength(1))
+    .force("x", d3.forceX(function (d) { return xScale(d.startYear); }).strength(1))
+    .force("y", d3.forceY(function (d) { return yScale(d.averageRating); }).strength(1))
     .force("collide", d3.forceCollide().radius(5).strength(1));
 
   // Update the position of the points on each tick of the simulation
-  simulation.on("tick", function() {
+  simulation.on("tick", function () {
     dataPoints
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; });
-});
+      .attr("cx", function (d) { return d.x; })
+      .attr("cy", function (d) { return d.y; });
+  });
   // Add tooltip functionality
   dataPoints.on('mouseover', (event, d) => {
     d3.select(event.currentTarget).style("stroke", "white");
@@ -190,7 +214,7 @@ function updateScatterPlot(data) {
   svg
     .append("g")
     .attr("class", "y-axis")
-.call(d3.axisLeft(yScale));
+    .call(d3.axisLeft(yScale));
 
   // Add legend
   let legend = svg.selectAll(".legend")
@@ -213,120 +237,4 @@ function updateScatterPlot(data) {
     .style("text-anchor", "end")
     .text(d => d)
     .style("fill", "white");
-}
-
-
-// Update the theme river graph with the given data
-function updateThemeRiver(data) {
-  // Define the stack layout
-  let genreMap = d3.group(data, d => d.genres.split(",")[0]);
-
-  // Define the stack layout
-  let stack = d3.stack()
-    .keys([...new Set(data.map(d => d.genres.split(",")[0]))])
-    .value((d, key) => {
-      let movies = genreMap.get(key);
-      return d3.mean(movies, m => m.averageRating);
-    });
-
-
-  // Define scales for the x and y axes
-  let xScale = d3
-    .scaleLinear()
-    .domain(d3.extent(data, function (d) { return d.startYear; }))
-    .range([0, width]);
-
-  let yScale = d3
-    .scaleLinear()
-    .domain([
-      d3.min(stack(data), d => d3.min(d, d => d[0])),
-      d3.max(stack(data), d => d3.max(d, d => d[1]))
-    ])
-    .range([height, 0]);
-
-  // Define color scale
-  const distinctValues = [...new Set(data.map(d => d.genres.split(",")[0]))];
-  let colorScale = d3.scaleOrdinal()
-    .domain(distinctValues)
-    .range(d3.schemeCategory20b);
-
-  // Remove the existing theme river areas
-  svg.selectAll(".theme-river-area").remove();
-
-  // Add the new theme river areas
-  let area = d3.area()
-    .x((d, i) => xScale(d.data.startYear))
-    .y0(d => yScale(d[0]))
-    .y1(d => yScale(d[1]));
-
-  let themeRiverAreas = svg.selectAll(".theme-river-area")
-    .data(stack(data))
-    .enter()
-    .append("path")
-    .attr("class", "theme-river-area")
-    .attr("d", area)
-    .attr("fill", d => colorScale(d.key))
-    .attr("opacity", 0.8);
-
-  // Add tooltip functionality
-  themeRiverAreas.on('mouseover', (event, d) => {
-    d3.select(event.currentTarget)
-    d3.select('#tooltip')
-      .style('display', 'block')
-      .html('<h1 class="tooltip-header">' + "Genre: " + d.key + '</h1>');
-  })
-    .on('mouseleave', (event) => {  //when mouse isn’t over area
-      d3.select('#tooltip').style('display', 'none'); // hide tooltip
-      d3.select(event.currentTarget)
-    })
-    .on('mousemove', (event, d) => {
-      d3.select('#tooltip')
-        .style('top', (event.pageY - 10) + 'px')
-        .style('left', (event.pageX + 10) + 'px');
-    });
-
-  // Add x-axis
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(xScale).ticks(20))
-    .selectAll("text")
-    .attr("transform", "rotate(-90)")
-    .attr("dx", "-.8em")
-    .attr("dy", ".15em")
-    .style("text-anchor", "end");
-
-  // Add y-axis
-  svg.append("g")
-    .call(d3.axisLeft(yScale))
-    .selectAll("text")
-    .style("text-anchor", "end");
-
-  // Add chart title
-  svg.append("text")
-    .attr("x", (width / 2))
-    .attr("y", 0 - (margin.top / 2))
-    .attr("text-anchor", "middle")
-    .style("font-size", "24px")
-    .text("Average IMDb Ratings of Top 100 Most Popular Movies Each Year by Genre (2006-2016)");
-
-  // Add legend
-  let legend = svg.selectAll(".legend")
-    .data(distinctValues)
-    .enter()
-    .append("g")
-    .attr("class", "legend")
-    .attr("transform", (d, i) => "translate(0," + i * 20 + ")");
-
-  legend.append("rect")
-    .attr("x", width - 18)
-    .attr("width", 18)
-    .attr("height", 18)
-    .style("fill", colorScale);
-
-  legend.append("text")
-    .attr("x", width - 24)
-    .attr("y", 9)
-    .attr("dy", ".35em")
-    .style("text-anchor", "end")
-    .text(d => d);
 }
