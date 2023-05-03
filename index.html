@@ -6,26 +6,42 @@
   <title>D3 Line Chart</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Plus Jakarta Sans" />
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <style>
-    body{
-      font-family: 'Plus Jakarta Sans';
-    }
-    html {
+html {
       background-color: rgb(61, 61, 61);
-      color: white;
+      color: black;
     }
 
+    body {
+      background-color: rgb(61, 61, 61);
+      color: black;
+    }
+    p{
+      font-size: 25px;;
+    }
     span {
       color: lightseagreen;
       float: right;
 
     }
-
-    h2 {
-      color: royalblue;
+    
+    .jumbotron {
+      background-color: #2e8ece;
+      color: #fff;
+      border-radius: 0;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      margin-bottom: 25px;
     }
 
+    .jumbotron h1 {
+      font-size: 100px;
+    }
+    #genre-list{
+      font-size: 30px;
+    }
     #tooltip {
       font-size: 30px;
       z-index: 9999;
@@ -59,37 +75,45 @@
     <svg id="legend"></svg>
   </div>
 
-  <!-- Add the div for the scroll story -->
-  <div id="scroll-story-container">
-    <span id="genre-list"></span>
-    <div class="section" id="section-1">
-      <h1>Movie Genre Popularity</h1>
-      <h2>Throughout the years of 1990 until present year 2023</h2>
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="jumbotron text-center">
+        <h1>Movie Genre Popularity</h1>
+        <h2>Throughout the years of 1990 until present year 2023</h2>
+      </div>
+      <div style="color: white;">
+        <div id="scroll-story-container">
+          <div class="section" id="section-2">
+            <h2 class="text-center">Data within our scatter plot below can be manipulated:</h2>
+            <p class="text-center">Click on the 'Update Plot' button to view different movie genres populate year at a
+              time</p>
+          </div>
+          <div class="section" id="section-3">
+            <p class="text-center">Click on the 'Sort By Genres' button to view the popularity of each genre
+              individually</p>
+            <p class="text-center">Each genre will have a specific color coordinated with it, therefore use the legend
+              key found on the right hand
+              side of the scatter plot graph.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="section" id="section-2">
-      <h2>You will have the ability to manipulate data within our scatter plot below:</h2>
-      <p>Click on the 'Update Plot' button to view different movie genres populate year at a time</p>
-    </div>
-
-    <div class="section" id="section-3">
-      <h2>You will have the ability to manipulate data within our scatter plot below:</h2>
-      <p>Click on the 'Sort By Genres' button to view the popularity of each genre individually</p>
-      <p>Each genre will have a specific color coordinated with it, therefore use the legend key found on the right hand
-        side of the scatter plot graph.</p>
+    <div class="fixed">
+      <span id="genre-list"></span>
+      <span id="tooltip"></span>
+      <button class="btn btn-primary" id="filter-button">Update Plot</button>
+      <button class="btn btn-primary" id="sort-by-genre-button">Sort By Genre</button>
+      <button class="btn btn-primary" id="filter-top-100">Sort By Top 100</button>
+      <br>
+      <div id="canvas" class="mt-5"></div>
     </div>
   </div>
-
-  <div class="fixed">
-
-    <button id="filter-button" style="float:left">Update Plot</button>
-    <button id="sort-by-genre-button" style="float:left"> Sort By Genre</button>
-    <button id="filter-top-100" style="float:left"> Sort By Top 100</button>    <label id="tooltip" style="float:right"></label>
-<br>
-    <br>
-    <div id="canvas" style="float:none"></div>
-
   </div>
+  </div>
+
+
+
 
   <script src="https://unpkg.com/scrollama"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>

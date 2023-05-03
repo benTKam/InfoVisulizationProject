@@ -19,7 +19,7 @@ const customColors = {
 };
 
 let margin = { top: 50, right: 50, bottom: 50, left: 100 },
-  width = 2000 - margin.left - margin.right,
+  width = 3500 - margin.left - margin.right,
   height = 1500 - margin.top - margin.bottom;
 
 let svg = d3
@@ -69,7 +69,6 @@ d3.tsv("20006.tsv")
     d3.select("#genre-list")
       .html("<ul>" + genreList + "</ul>");
     console.log(genreList);
-    //updateThemeRiver(data);
   })
   .catch(function (error) {
     console.log(error); // Log any errors
@@ -89,7 +88,6 @@ d3.select("#filter-button").on("click", function () {
 
   // Update the scatter plot with the filtered data
   updateScatterPlot(filteredData);
-  //updateThemeRiver(filteredData);
 
   // Increment the current year by 1
   currentYear++;
