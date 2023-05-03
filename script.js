@@ -20,7 +20,7 @@ d3.tsv("20006.tsv")
 
     // Initialize the scatter plot
     updateScatterPlot(data);
-    updateThemeRiver(data);
+    //updateThemeRiver(data);
   })
   .catch(function (error) {
     console.log(error); // Log any errors
@@ -28,6 +28,8 @@ d3.tsv("20006.tsv")
 
 // Add event listener to the filter button
 let currentYear = 1990;
+
+
 
 d3.select("#filter-button").on("click", function () {
   // Filter data based on currentYear
@@ -37,16 +39,13 @@ d3.select("#filter-button").on("click", function () {
 
   // Update the scatter plot with the filtered data
   updateScatterPlot(filteredData);
+  //updateThemeRiver(filteredData);
 
   // Increment the current year by 1
   currentYear++;
   if (currentYear > 2023) {
     currentYear = 1990;
   }
-
-
-  // Update the scatter plot with the filtered data
-  updateScatterPlot(filteredData);
 });
 
 
@@ -66,7 +65,7 @@ function updateScatterPlot(data) {
   // Define color scale
   const distinctValues = [...new Set(data.map(d => d.genres.split(",")[0]))];
   let colorScale = d3.scaleOrdinal().domain(distinctValues)
-    .range(d3.schemeSet2);
+    .range(d3.schemeCategory10);
 
   // Remove the existing scatter plot points
   svg.selectAll(".scatter-point").remove();
@@ -109,11 +108,35 @@ function updateScatterPlot(data) {
     .append("g")
     .attr("class", "y-axis")
 .call(d3.axisLeft(yScale));
+
+  // Add legend
+  let legend = svg.selectAll(".legend")
+    .data(distinctValues)
+    .enter()
+    .append("g")
+    .attr("class", "legend")
+    .attr("transform", (d, i) => "translate(0," + i * 20 + ")");
+
+  legend.append("rect")
+    .attr("x", width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", colorScale);
+
+  legend.append("text")
+    .attr("x", width - 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(d => d);
 }
 
 
 // Update the theme river graph with the given data
 function updateThemeRiver(data) {
+  // Define the stack layout
+  let genreMap = d3.group(data, d => d.genres.split(",")[0]);
+
   // Define the stack layout
   let stack = d3.stack()
     .keys([...new Set(data.map(d => d.genres.split(",")[0]))])
@@ -121,8 +144,6 @@ function updateThemeRiver(data) {
       let movies = genreMap.get(key);
       return d3.mean(movies, m => m.averageRating);
     });
-
-  let genreMap = d3.group(data, d => d.genres.split(",")[0]);
 
 
   // Define scales for the x and y axes
@@ -143,7 +164,7 @@ function updateThemeRiver(data) {
   const distinctValues = [...new Set(data.map(d => d.genres.split(",")[0]))];
   let colorScale = d3.scaleOrdinal()
     .domain(distinctValues)
-    .range(d3.schemeSet2);
+    .range(d3.schemeCategory20b);
 
   // Remove the existing theme river areas
   svg.selectAll(".theme-river-area").remove();
@@ -165,7 +186,7 @@ function updateThemeRiver(data) {
 
   // Add tooltip functionality
   themeRiverAreas.on('mouseover', (event, d) => {
-    d3.select(event.currentTarget).style("stroke", "black");
+    d3.select(event.currentTarget)
     d3.select('#tooltip')
       .style('display', 'block')
       .html('<h1 class="tooltip-header">' + "Genre: " + d.key + '</h1>');
